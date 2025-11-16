@@ -1,12 +1,15 @@
-import pandas as pd
 import numpy as np 
 import matplotlib.pyplot as plt
 import seaborn as sns
 import matplotlib.ticker as mtick
 import streamlit as st
+import os
+import pandas as pd
 
-# Load CSV (fixed)
-df = pd.read_csv('./cleaned_car_data.csv')
+current_dir = os.path.dirname(os.path.abspath(__file__))
+csv_path = os.path.join(current_dir, "cleaned_car_data.csv")
+
+df = pd.read_csv(csv_path)
 
 st.title("Car Dataset EDA & Visualization")
 
