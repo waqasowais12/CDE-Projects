@@ -6,20 +6,30 @@ import streamlit as st
 import os
 import pandas as pd
 
-current_dir = os.path.dirname(os.path.abspath(__file__))
-csv_path = os.path.join(current_dir, "cleaned_car_data.csv")
-
-df = pd.read_csv(csv_path)
-
-st.title("Car Dataset EDA & Visualization")
-
-# Streamlit cache
+# ---------------- Data Loader ----------------
 @st.cache_data
 def load_data():
-    df = pd.read_csv('./cleaned_car_data.csv')
+    # First, check if file exists in the same folder
+    base_path = os.path.dirname(os.path.abspath(__file__))
+    csv_path = os.path.join(base_path, "cleaned_car_data.csv")
+    
+    if os.path.exists(csv_path):
+        df = pd.read_csv(csv_path)
+    else:
+        st.warning("Local CSV not found! Upload CSV manually.")
+        uploaded_file = st.file_uploader("Upload cleaned_car_data.csv", type="csv")
+        if uploaded_file is not None:
+            df = pd.read_csv(uploaded_file)
+        else:
+            st.stop()  # Stop execution if CSV not available
     return df
 
+# ---------------- Load Data ----------------
 df = load_data()
+
+st.title("Car Dataset EDA & Visualization")
+st.dataframe(df.head(50))
+
 
 # Show raw data
 st.subheader("Raw Data")
